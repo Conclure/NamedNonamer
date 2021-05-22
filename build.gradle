@@ -20,7 +20,6 @@ dependencies {
     implementation 'org.spongepowered:configurate-gson:4.1.1'
     implementation 'com.github.ben-manes.caffeine:caffeine:3.0.2'
     implementation 'net.sf.jopt-simple:jopt-simple:6.0-alpha-3'
-    //implementation 'net.sf.trove4j:trove4j:3.1.0'
 }
 
 test {
