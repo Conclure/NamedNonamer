@@ -1,9 +1,9 @@
 package me.conclure.nonamer.bootstrap;
 
-public interface BootstrapProcess {
+import me.conclure.nonamer.util.concurrent.Awaiter;
+
+public interface BootstrapProcess extends Awaiter {
   boolean isRunning();
 
   boolean hasRunned();
-
-  void await() throws InterruptedException;
 }

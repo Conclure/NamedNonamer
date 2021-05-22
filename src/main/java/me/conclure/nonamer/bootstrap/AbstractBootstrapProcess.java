@@ -1,6 +1,7 @@
 package me.conclure.nonamer.bootstrap;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractBootstrapProcess implements Runnable, BootstrapProcess {
   private int runCode = 1;
@@ -33,5 +34,10 @@ public abstract class AbstractBootstrapProcess implements Runnable, BootstrapPro
   @Override
   public final void await() throws InterruptedException {
     this.latch.await();
+  }
+
+  @Override
+  public final boolean await(long timeout, TimeUnit unit) throws InterruptedException {
+    return this.latch.await(timeout, unit);
   }
 }
