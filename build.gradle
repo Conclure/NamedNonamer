@@ -1,0 +1,38 @@
+plugins {
+    id 'java-library'
+}
+
+group 'me.conclure.vanis'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://m2.dv8tion.net/releases'
+    }
+}
+
+dependencies {
+    runtimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'net.dv8tion:JDA:4.2.1_265'
+    implementation "com.google.guava:guava:30.1.1-jre"
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.spongepowered:configurate-gson:4.1.1'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.0.2'
+    implementation 'net.sf.jopt-simple:jopt-simple:6.0-alpha-3'
+    //implementation 'net.sf.trove4j:trove4j:3.1.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task runBot(type: JavaExec, group: "bot") {
+    String token = neptunarenToken
+
+    workingDir file("./run/")
+    main "-jar"
+    standardInput System.in
+
+    args "Bot.jar", "-token", token
+}
