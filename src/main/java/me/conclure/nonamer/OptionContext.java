@@ -2,10 +2,13 @@ package me.conclure.nonamer;
 
 import joptsimple.OptionSet;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public final class OptionContext {
   private final String token;
 
-  private OptionContext(String token) {
+  OptionContext(String token) {
     this.token = token;
   }
 

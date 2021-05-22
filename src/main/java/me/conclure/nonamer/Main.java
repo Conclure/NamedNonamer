@@ -4,10 +4,12 @@ import joptsimple.OptionParser;
 
 import me.conclure.nonamer.bootstrap.Bootstrap;
 
-import java.util.concurrent.CompletableFuture;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.errorprone.annotations.Var;
 
+@ParametersAreNonnullByDefault
 public final class Main {
 
   public static void main(String[] args) {
@@ -27,13 +29,15 @@ public final class Main {
       bootstrap.awaitTermination();
     } catch (InterruptedException e) {
       bootstrap.disable();
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
   }
 
   static class ArgumentParser extends OptionParser {
     {
-      this.accepts("token", "Bot token").withRequiredArg().required();
+      this.accepts("token", "Bot token")
+          .withRequiredArg()
+          .required();
     }
   }
 }

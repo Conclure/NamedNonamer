@@ -1,19 +1,21 @@
 package me.conclure.nonamer.bootstrap;
 
-import org.slf4j.Logger;
-
 import me.conclure.nonamer.OptionContext;
+import me.conclure.nonamer.bootstrap.AbstractBootstrapProcess.PerformException;
 import me.conclure.nonamer.bot.Bot;
+import me.conclure.nonamer.util.logging.Logger;
 import me.conclure.nonamer.util.logging.LoggerProvider;
 
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+@ParametersAreNonnullByDefault
 public class Bootstrap {
   private final CountDownLatch terminationLatch = new CountDownLatch(1);
   private final Logger logger = LoggerProvider.get(this);
@@ -37,22 +39,26 @@ public class Bootstrap {
   }
 
   public void enable() {
-    try {
-      this.bootstrapThread.execute(this.enableProcess);
-    } catch (Throwable exception) {
-      this.logger.error(exception.getMessage(),exception);
-      this.terminationLatch.countDown();
-    }
+    this.bootstrapThread.execute(() -> {
+      try {
+        this.enableProcess.run();
+      } catch (PerformException exception) {
+        this.logger.error(exception);
+        this.terminationLatch.countDown();
+      }
+    });
   }
 
   public void disable() {
-    try {
-      this.bootstrapThread.execute(this.disableProcess);
-    } catch (Throwable exception) {
-      this.logger.error(exception.getMessage(), exception);
-    } finally {
-      this.terminationLatch.countDown();
-    }
+    this.bootstrapThread.execute(() -> {
+      try {
+        this.disableProcess.run();
+      } catch (PerformException exception) {
+        this.logger.error(exception);
+      } finally {
+        this.terminationLatch.countDown();
+      }
+    });
   }
 
   public void awaitTermination() throws InterruptedException {
