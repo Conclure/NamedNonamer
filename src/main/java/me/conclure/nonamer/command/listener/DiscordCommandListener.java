@@ -2,10 +2,12 @@ package me.conclure.nonamer.command.listener;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
 import me.conclure.nonamer.command.CommandManager;
+import me.conclure.nonamer.command.CommandSender;
 import me.conclure.nonamer.command.parse.CommandParseFlag;
 
 import java.util.EnumSet;
@@ -32,11 +34,14 @@ public class DiscordCommandListener {
       return;
     }
 
-    if (message.getAuthor().isBot()) {
+    User author = message.getAuthor();
+
+    if (author.isBot()) {
       return;
     }
 
-    this.commandManager.interceptor().handle(new DiscordCommandSender(jda, id), message.getContentStripped(), this.flagSet);
+    CommandSender sender = new DiscordCommandSender(this.jda, author.getIdLong(), message.getGuild().getIdLong());
+    this.commandManager.interceptor().handle(sender, message.getContentStripped(), this.flagSet);
   }
 
   public void shutdown() {

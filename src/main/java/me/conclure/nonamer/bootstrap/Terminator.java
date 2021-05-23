@@ -12,7 +12,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 class Terminator extends AbstractBootstrapProcess {
   private final Bootstrap bootstrap;
-  private final Logger logger = LoggerCreator.get(this);
+  private final Logger logger = LoggerCreator.create(this);
 
   Terminator(Bootstrap bootstrap) {
     this.bootstrap = bootstrap;

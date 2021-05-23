@@ -16,11 +16,12 @@ public class CommandInterceptor {
 
   public void handle(CommandSender sender, String str, Set<CommandParseFlag> flags) {
     CommandParseResult parse = this.commandManager.parser().parse(str);
-    Optional<CommandLine> commandLine = parse.commandLine();
+    Optional<CommandArguments> commandLine = parse.commandLine();
     if (commandLine.isEmpty()) {
       return;
     }
 
+    this.commandManager.coordinator().dispatch(sender,);
   }
 
   public void handle(CommandSender sender, String str) {

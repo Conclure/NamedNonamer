@@ -1,25 +1,19 @@
 package me.conclure.nonamer.command;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.NotNull;
-
 import me.conclure.nonamer.command.commands.Command;
+import me.conclure.nonamer.command.commands.CommandException;
+import me.conclure.nonamer.util.logging.Logger;
+import me.conclure.nonamer.util.logging.LoggerCreator;
 
-import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
-import com.google.common.collect.ForwardingMap;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.MoreCollectors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 public class CommandCoordinator {
@@ -27,12 +21,27 @@ public class CommandCoordinator {
       .setNameFormat("command-executor")
       .setDaemon(true)
       .build());
+  private final Logger logger = LoggerCreator.create(this);
   private final CommandMap commandMap = new CommandMap(ImmutableList.<Command>builder()
 
       .build());
 
-  public void execute(CommandSender sender, String commandName, CommandLine line) {
+  public void dispatch(CommandSender sender, String commandName, CommandArguments line) {
+    Optional<Command> optional = this.commandMap.get(commandName);
 
+    if (optional.isEmpty()) {
+      return;
+    }
+
+    Command command = optional.get();
+
+    this.executor.execute(() -> {
+      try {
+        command.execute(sender,line);
+      } catch (Exception exception) {
+        this.logger.error(new CommandException(exception));
+      }
+    });
   }
 
   static class CommandMap {

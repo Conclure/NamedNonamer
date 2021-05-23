@@ -1,7 +1,10 @@
 package me.conclure.nonamer.command.commands;
 
-public class Command {
-  public String name() {
-    return null;
-  }
+import me.conclure.nonamer.command.CommandArguments;
+import me.conclure.nonamer.command.CommandSender;
+
+public abstract class Command {
+  public abstract String name();
+
+  public abstract void execute(CommandSender sender, CommandArguments arguments);
 }

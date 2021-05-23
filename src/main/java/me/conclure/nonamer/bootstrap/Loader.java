@@ -18,7 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 class Loader extends AbstractBootstrapProcess {
   private final Bootstrap bootstrap;
-  private final Logger logger = LoggerCreator.get(this);
+  private final Logger logger = LoggerCreator.create(this);
 
   Loader(Bootstrap bootstrap) {
     this.bootstrap = bootstrap;

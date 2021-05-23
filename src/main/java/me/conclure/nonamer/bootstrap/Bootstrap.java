@@ -9,7 +9,6 @@ import me.conclure.nonamer.util.logging.LoggerCreator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -18,7 +17,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 @ParametersAreNonnullByDefault
 public class Bootstrap {
   private final CountDownLatch terminationLatch = new CountDownLatch(1);
-  private final Logger logger = LoggerCreator.get(this);
+  private final Logger logger = LoggerCreator.create(this);
   private final ExecutorService bootstrapThread = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
       .setDaemon(true)
       .setNameFormat("bootstrap-executor")
