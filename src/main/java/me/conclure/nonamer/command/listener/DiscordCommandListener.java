@@ -1,20 +1,20 @@
-package me.conclure.nonamer.command.publisher;
+package me.conclure.nonamer.command.listener;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
-import me.conclure.nonamer.command.CommandInterceptor;
+import me.conclure.nonamer.command.CommandManager;
 
 
 public class DiscordCommandListener {
-  private final CommandInterceptor interceptor;
+  private final CommandManager commandManager;
   private final JDA jda;
 
-  public DiscordCommandListener(JDA jda, CommandInterceptor interceptor) {
+  public DiscordCommandListener(JDA jda, CommandManager commandManager) {
     this.jda = jda;
-    this.interceptor = interceptor;
+    this.commandManager = commandManager;
     jda.addEventListener(this);
   }
 
@@ -30,7 +30,7 @@ public class DiscordCommandListener {
       return;
     }
 
-    this.interceptor.handle(message.getContentStripped());
+    this.commandManager.interceptor().handle(message.getContentStripped());
   }
 
   public void shutdown() {
