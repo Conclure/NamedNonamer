@@ -19,23 +19,19 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 public class Bootstrap {
   private final CountDownLatch terminationLatch = new CountDownLatch(1);
   private final Logger logger = LoggerCreator.get(this);
+  private final ExecutorService bootstrapThread = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
+      .setDaemon(true)
+      .setNameFormat("bootstrap-executor")
+      .setThreadFactory(Executors.defaultThreadFactory())
+      .setUncaughtExceptionHandler(new UncaughtExceptionHandler())
+      .build());
+  private final AbstractBootstrapProcess enableProcess = new Loader(this);;
+  private final AbstractBootstrapProcess disableProcess = new Terminator(this);;
   private final OptionContext optionContext;
-  private final ExecutorService bootstrapThread;
-  private final AbstractBootstrapProcess enableProcess;
-  private final AbstractBootstrapProcess disableProcess;
   private Bot bot;
 
   public Bootstrap(OptionContext context) {
     this.optionContext = context;
-    ThreadFactory threadFactory = new ThreadFactoryBuilder()
-        .setDaemon(true)
-        .setNameFormat("bootstrap-executor")
-        .setThreadFactory(Executors.defaultThreadFactory())
-        .setUncaughtExceptionHandler(new UncaughtExceptionHandler())
-        .build();
-    this.bootstrapThread = Executors.newSingleThreadExecutor(threadFactory);
-    this.enableProcess = new Loader(this);
-    this.disableProcess = new Terminator(this);
   }
 
   public void enable() {

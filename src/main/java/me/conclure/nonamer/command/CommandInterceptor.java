@@ -1,7 +1,6 @@
-package me.conclure.nonamer.command.intercept;
+package me.conclure.nonamer.command;
 
-import me.conclure.nonamer.command.CommandLine;
-import me.conclure.nonamer.command.CommandManager;
+import me.conclure.nonamer.command.parse.CommandParseFlag;
 import me.conclure.nonamer.command.parse.CommandParseResult;
 
 import java.util.Collections;
@@ -15,15 +14,16 @@ public class CommandInterceptor {
     this.commandManager = commandManager;
   }
 
-  public void handle(String str, Set<CommandInterceptFlag> flags) {
+  public void handle(CommandSender sender, String str, Set<CommandParseFlag> flags) {
     CommandParseResult parse = this.commandManager.parser().parse(str);
     Optional<CommandLine> commandLine = parse.commandLine();
     if (commandLine.isEmpty()) {
       return;
     }
+
   }
 
-  public void handle(String str) {
-    this.handle(str, Collections.emptySet());
+  public void handle(CommandSender sender, String str) {
+    this.handle(sender, str, Collections.emptySet());
   }
 }

@@ -1,15 +1,17 @@
 package me.conclure.nonamer.command.listener;
 
-import me.conclure.nonamer.command.intercept.CommandInterceptFlag;
-import me.conclure.nonamer.command.intercept.CommandInterceptor;
-import me.conclure.nonamer.command.CommandManager;
+import net.dv8tion.jda.api.Permission;
 
-import java.util.EnumSet;
+import me.conclure.nonamer.command.CommandInterceptor;
+import me.conclure.nonamer.command.CommandManager;
+import me.conclure.nonamer.command.CommandSender;
+
 import java.util.Scanner;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConsoleCommandListener extends Thread {
+  public static final CommandSender CONSOLE_SENDER = new ConsoleSender();
+
   private final Scanner scanner = new Scanner(System.in);
   private final CommandManager commandManager;
   private final AtomicBoolean shutdown = new AtomicBoolean();
@@ -23,16 +25,28 @@ public class ConsoleCommandListener extends Thread {
   @Override
   public void run() {
     CommandInterceptor interceptor = this.commandManager.interceptor();
-    Set<CommandInterceptFlag> flagSet = EnumSet.of(CommandInterceptFlag.IGNORE_PREFIX);
 
     while (!this.shutdown.get() && this.scanner.hasNextLine()) {
       this.scanner.nextLine();
-      interceptor.handle(this.scanner.nextLine(),flagSet);
+      interceptor.handle(CONSOLE_SENDER,this.scanner.nextLine());
     }
     this.scanner.close();
   }
 
   public void shutdown() {
     this.shutdown.set(false);
+  }
+
+  static class ConsoleSender implements CommandSender {
+
+    @Override
+    public boolean hasPermission(String permission) {
+      return true;
+    }
+
+    @Override
+    public boolean hasPermission(Permission permission) {
+      return true;
+    }
   }
 }
