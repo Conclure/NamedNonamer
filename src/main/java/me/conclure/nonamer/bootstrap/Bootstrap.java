@@ -4,7 +4,7 @@ import me.conclure.nonamer.OptionContext;
 import me.conclure.nonamer.bootstrap.AbstractBootstrapProcess.PerformException;
 import me.conclure.nonamer.bot.Bot;
 import me.conclure.nonamer.util.logging.Logger;
-import me.conclure.nonamer.util.logging.LoggerProvider;
+import me.conclure.nonamer.util.logging.LoggerCreator;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -18,7 +18,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 @ParametersAreNonnullByDefault
 public class Bootstrap {
   private final CountDownLatch terminationLatch = new CountDownLatch(1);
-  private final Logger logger = LoggerProvider.get(this);
+  private final Logger logger = LoggerCreator.get(this);
   private final OptionContext optionContext;
   private final ExecutorService bootstrapThread;
   private final AbstractBootstrapProcess enableProcess;

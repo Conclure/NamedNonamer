@@ -1,9 +1,12 @@
 plugins {
     id 'java-library'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'me.conclure.vanis'
 version '1.0'
+mainClassName = 'me.conclure.nonamer.Main'
 
 repositories {
     mavenCentral()
@@ -27,12 +30,37 @@ test {
     useJUnitPlatform()
 }
 
+shadowJar.archiveFileName.set("Bot.jar")
+
+task cloneJar(group: "bot") {
+    dependsOn shadowJar
+    def dir = file("./run/")
+
+    doFirst {
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+    }
+
+    doLast {
+        copy {
+            from shadowJar.archiveFile
+            into dir
+        }
+    }
+}
+
 task runBot(type: JavaExec, group: "bot") {
-    String token = neptunarenToken
+    String token = developmentNonamer
 
     workingDir file("./run/")
     main "-jar"
     standardInput System.in
 
     args "Bot.jar", "-token", token
+}
+
+task cloneRunBot(group: "bot") {
+    dependsOn cloneJar
+    finalizedBy runBot
 }

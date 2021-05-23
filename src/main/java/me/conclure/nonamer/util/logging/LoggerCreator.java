@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public interface LoggerProvider {
+public interface LoggerCreator {
   static Logger get(Class<?> clazz) {
     return new Logger(LoggerFactory.getLogger(clazz));
   }

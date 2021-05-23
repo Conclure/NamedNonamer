@@ -13,7 +13,7 @@ import com.google.errorprone.annotations.Var;
 public final class Main {
 
   public static void main(String[] args) {
-    OptionParser parser = new OptionParser();
+    OptionParser parser = new ArgumentParser();
     @Var OptionContext context;
 
     try {
