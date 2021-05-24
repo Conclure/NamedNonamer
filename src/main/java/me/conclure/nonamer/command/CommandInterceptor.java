@@ -4,7 +4,6 @@ import me.conclure.nonamer.command.parse.CommandParseFail;
 import me.conclure.nonamer.command.parse.CommandParseFlag;
 import me.conclure.nonamer.command.parse.CommandParseResult;
 import me.conclure.nonamer.command.parse.CommandParseSuccess;
-import me.conclure.nonamer.command.parse.CommandParser;
 import me.conclure.nonamer.command.sender.CommandSender;
 
 import java.util.Collections;
@@ -18,7 +17,7 @@ public class CommandInterceptor {
   }
 
   public void handle(CommandSender sender, String str, Set<CommandParseFlag> flags) {
-    CommandParseResult parse = CommandParser.parse(str,flags);
+    CommandParseResult parse = this.commandManager.parser().parse(str,flags);
 
     if (parse == null) {
       return;
@@ -34,7 +33,6 @@ public class CommandInterceptor {
       CommandParseFail parseFail = (CommandParseFail) parse;
       switch (parseFail) {
         case EMPTY_COMMAND: {
-          sender.sendMessage("EMPTY COMMAND");
         }
       }
     }

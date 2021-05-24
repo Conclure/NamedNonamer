@@ -19,11 +19,10 @@ public class ConsoleCommandSender implements CommandSender {
   }
 
   @Override
-  public CompletableFuture<PermissionResult> hasPermission(Permission permission) {
-    return CompletableFuture.completedFuture(PermissionResult.TRUE);
+  public PermissionResult hasPermission(Permission permission) {
+    return PermissionResult.TRUE;
   }
 
-  @Override
   public CompletableFuture<Void> sendMessage(String message) {
     return CompletableFuture.runAsync(() -> this.logger.info(message), this.commandManager.coordinator().executor());
   }

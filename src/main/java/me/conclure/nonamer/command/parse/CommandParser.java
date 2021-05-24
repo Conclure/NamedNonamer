@@ -11,7 +11,7 @@ public class CommandParser {
   static final String PREFIX = "!";
 
 
-  public static CommandParseResult parse(@Var String string, Set<CommandParseFlag> flags) {
+  public CommandParseResult parse(@Var String string, Set<CommandParseFlag> flags) {
     string = string.strip();
 
     if (flags.contains(CommandParseFlag.ASSERT_PREFIX)) {

@@ -80,6 +80,10 @@ public class Bootstrap {
     this.bot = bot;
   }
 
+  public Logger logger() {
+    return this.logger;
+  }
+
   static class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {

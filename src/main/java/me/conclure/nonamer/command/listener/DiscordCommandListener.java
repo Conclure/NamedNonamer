@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
+import me.conclure.nonamer.bootstrap.Bootstrap;
 import me.conclure.nonamer.command.CommandManager;
 import me.conclure.nonamer.command.sender.CommandSender;
 import me.conclure.nonamer.command.parse.CommandParseFlag;

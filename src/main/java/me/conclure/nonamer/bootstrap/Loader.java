@@ -38,7 +38,7 @@ class Loader extends AbstractBootstrapProcess {
         })
         .build()
         .awaitReady();
-    CommandManager commandManager = new CommandManager(jda);
+    CommandManager commandManager = new CommandManager(this.bootstrap,jda);
     this.bootstrap.setBot(new Bot(jda, commandManager));
 
     this.logger.debug("Loaded!");

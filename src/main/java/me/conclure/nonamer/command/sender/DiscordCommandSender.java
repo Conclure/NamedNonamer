@@ -23,43 +23,36 @@ public class DiscordCommandSender implements CommandSender {
   }
 
   @Override
-  public CompletableFuture<PermissionResult> hasPermission(Permission permission) {
+  public PermissionResult hasPermission(Permission permission) {
     Guild guild = this.jda.getGuildById(this.guildId);
 
     if (guild == null) {
-      return CompletableFuture.completedFuture(PermissionResult.UNMATCHED_GUILD);
+      return PermissionResult.UNMATCHED_GUILD;
     }
 
-    CompletableFuture<User> user = CompletableFuture.completedFuture(this.jda.getUserById(this.userId));
+    User user = this.jda.getUserById(this.userId);
 
-    if (user.join() == null) {
-      user = this.jda.retrieveUserById(this.userId).submit();
+    if (user == null) {
+      user = this.jda.retrieveUserById(this.userId).complete();
     }
 
     TextChannel channel = this.jda.getTextChannelById(this.channelId);
 
     if (channel == null) {
-      return CompletableFuture.completedFuture(PermissionResult.UNMATCHED_CHANNEL);
+      return PermissionResult.UNMATCHED_CHANNEL;
     }
 
-    return user.thenApply(u -> {
-      Member member = guild.getMember(u);
+    Member member = guild.getMember(user);
 
-      if (member == null) {
-        return PermissionResult.MEMBER_NOT_IN_GUILD;
-      }
+    if (member == null) {
+      return PermissionResult.MEMBER_NOT_IN_GUILD;
+    }
 
-      if (member.hasPermission(channel,permission)) {
-        return PermissionResult.TRUE;
-      }
+    if (member.hasPermission(channel,permission)) {
+      return PermissionResult.TRUE;
+    }
 
-      return PermissionResult.FALSE;
-    });
+    return PermissionResult.FALSE;
 
-  }
-
-  @Override
-  public CompletableFuture<Void> sendMessage(String message) {
-    return CompletableFuture.runAsync()
   }
 }

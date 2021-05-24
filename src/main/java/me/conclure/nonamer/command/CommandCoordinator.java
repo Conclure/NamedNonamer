@@ -1,5 +1,6 @@
 package me.conclure.nonamer.command;
 
+import me.conclure.nonamer.bootstrap.Bootstrap;
 import me.conclure.nonamer.command.commands.Command;
 import me.conclure.nonamer.command.commands.CommandException;
 import me.conclure.nonamer.command.sender.CommandSender;
@@ -25,8 +26,17 @@ public class CommandCoordinator {
       .build());
   private final Logger logger = LoggerCreator.create(this);
   private final CommandMap commandMap = new CommandMap(ImmutableList.<Command>builder()
-
       .build());
+
+  public CommandCoordinator(Bootstrap bootstrap) {
+    this.executor.execute(() -> {
+      try {
+        bootstrap.enableProcess().await();
+      } catch (InterruptedException e) {
+        bootstrap.logger().error(e);
+      }
+    });
+  }
 
   public void dispatch(CommandSender sender, String commandName, CommandArguments line) {
     Optional<Command> optional = this.commandMap.get(commandName);
