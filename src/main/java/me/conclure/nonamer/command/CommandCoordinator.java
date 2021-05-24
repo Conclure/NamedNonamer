@@ -2,12 +2,14 @@ package me.conclure.nonamer.command;
 
 import me.conclure.nonamer.command.commands.Command;
 import me.conclure.nonamer.command.commands.CommandException;
+import me.conclure.nonamer.command.sender.CommandSender;
 import me.conclure.nonamer.util.logging.Logger;
 import me.conclure.nonamer.util.logging.LoggerCreator;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
@@ -42,6 +44,10 @@ public class CommandCoordinator {
         this.logger.error(new CommandException(exception));
       }
     });
+  }
+
+  public Executor executor() {
+    return this.executor;
   }
 
   static class CommandMap {

@@ -3,14 +3,15 @@ package me.conclure.nonamer.command;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class CommandArguments implements Iterable<String> {
   private final List<String> arguments;
 
-  public CommandArguments() {
-    this.arguments = new ArrayList<>();
+  public CommandArguments(String[] arguments) {
+    this.arguments = List.of(arguments);
   }
 
   public int length() {

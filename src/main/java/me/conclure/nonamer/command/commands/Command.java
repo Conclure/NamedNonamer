@@ -1,7 +1,7 @@
 package me.conclure.nonamer.command.commands;
 
 import me.conclure.nonamer.command.CommandArguments;
-import me.conclure.nonamer.command.CommandSender;
+import me.conclure.nonamer.command.sender.CommandSender;
 
 public abstract class Command {
   public abstract String name();

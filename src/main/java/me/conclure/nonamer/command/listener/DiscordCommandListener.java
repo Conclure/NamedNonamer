@@ -7,8 +7,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
 import me.conclure.nonamer.command.CommandManager;
-import me.conclure.nonamer.command.CommandSender;
+import me.conclure.nonamer.command.sender.CommandSender;
 import me.conclure.nonamer.command.parse.CommandParseFlag;
+import me.conclure.nonamer.command.sender.DiscordCommandSender;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -40,7 +41,11 @@ public class DiscordCommandListener {
       return;
     }
 
-    CommandSender sender = new DiscordCommandSender(this.jda, author.getIdLong(), message.getGuild().getIdLong());
+    long authorId = author.getIdLong();
+    long guildId = message.getGuild().getIdLong();
+    long channelId = message.getChannel().getIdLong();
+
+    CommandSender sender = new DiscordCommandSender(this.jda, authorId, guildId, channelId);
     this.commandManager.interceptor().handle(sender, message.getContentStripped(), this.flagSet);
   }
 
