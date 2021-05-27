@@ -23,36 +23,63 @@ public class DiscordCommandSender implements CommandSender {
   }
 
   @Override
-  public PermissionResult hasPermission(Permission permission) {
-    Guild guild = this.jda.getGuildById(this.guildId);
+  public CompletableFuture<PermissionResult> hasPermission(Permission permission) {
+    return CompletableFuture.supplyAsync(() -> {
+      Guild guild = this.jda.getGuildById(this.guildId);
 
-    if (guild == null) {
-      return PermissionResult.UNMATCHED_GUILD;
-    }
+      if (guild == null) {
+        return PermissionResult.UNMATCHED_GUILD;
+      }
 
-    User user = this.jda.getUserById(this.userId);
+      User user = this.jda.getUserById(this.userId);
 
-    if (user == null) {
-      user = this.jda.retrieveUserById(this.userId).complete();
-    }
+      if (user == null) {
+        user = this.jda.retrieveUserById(this.userId).complete();
+      }
 
-    TextChannel channel = this.jda.getTextChannelById(this.channelId);
+      TextChannel channel = this.jda.getTextChannelById(this.channelId);
 
-    if (channel == null) {
-      return PermissionResult.UNMATCHED_CHANNEL;
-    }
+      if (channel == null) {
+        return PermissionResult.UNMATCHED_CHANNEL;
+      }
 
-    Member member = guild.getMember(user);
+      Member member = guild.getMember(user);
 
-    if (member == null) {
-      return PermissionResult.MEMBER_NOT_IN_GUILD;
-    }
+      if (member == null) {
+        return PermissionResult.MEMBER_NOT_IN_GUILD;
+      }
 
-    if (member.hasPermission(channel,permission)) {
-      return PermissionResult.TRUE;
-    }
+      if (member.hasPermission(channel,permission)) {
+        return PermissionResult.TRUE;
+      }
 
-    return PermissionResult.FALSE;
+      return PermissionResult.FALSE;
+    });
+  }
 
+  @Override
+  public CompletableFuture<Void> sendMessage(String message) {
+    return CompletableFuture.runAsync(() -> {
+      TextChannel channel = this.jda.getTextChannelById(this.channelId);
+
+      if (channel == null) {
+        return;
+      }
+
+      channel.sendMessage(message).complete();
+    });
+  }
+
+  @Override
+  public CompletableFuture<String> name() {
+    return CompletableFuture.supplyAsync(() -> {
+      User user = this.jda.getUserById(this.userId);
+
+      if (user == null) {
+        user = this.jda.retrieveUserById(this.userId).complete();
+      }
+
+      return user.getAsTag();
+    });
   }
 }

@@ -20,9 +20,9 @@ public class Bootstrap {
   private final Logger logger = LoggerCreator.create(this);
   private final ExecutorService bootstrapThread = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
       .setDaemon(true)
-      .setNameFormat("bootstrap-executor")
+      .setNameFormat("Bootstrap")
       .setThreadFactory(Executors.defaultThreadFactory())
-      .setUncaughtExceptionHandler(new UncaughtExceptionHandler())
+      .setUncaughtExceptionHandler((t,e) -> logger.error(e))
       .build());
   private final AbstractBootstrapProcess enableProcess = new Loader(this);;
   private final AbstractBootstrapProcess disableProcess = new Terminator(this);;

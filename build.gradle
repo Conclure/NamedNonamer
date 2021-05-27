@@ -51,7 +51,7 @@ task cloneJar(group: "bot") {
 }
 
 task runBot(type: JavaExec, group: "bot") {
-    String token = developmentNonamer
+    String token = "ODQ1NDQ1NzM4MDcwMTQ3MDkz.YKhEsw.R5GF86oWi0LH7asTOoqeEPsc_7o"
 
     workingDir file("./run/")
     main "-jar"

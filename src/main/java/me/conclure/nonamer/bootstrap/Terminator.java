@@ -24,8 +24,7 @@ class Terminator extends AbstractBootstrapProcess {
     bot.commandManager().shutdown();
     JDA jda = bot.jda();
     jda.shutdown();
-    jda.awaitStatus(Status.SHUTDOWN);
 
-    this.logger.debug("Terminated!");
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> this.logger.debug("Terminated!")));
   }
 }

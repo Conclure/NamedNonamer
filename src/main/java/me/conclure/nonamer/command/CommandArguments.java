@@ -27,4 +27,9 @@ public class CommandArguments implements Iterable<String> {
   public Iterator<String> iterator() {
     return this.arguments.iterator();
   }
+
+  @Override
+  public String toString() {
+    return arguments.toString();
+  }
 }

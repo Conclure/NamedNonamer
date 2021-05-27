@@ -14,12 +14,14 @@ import me.conclure.nonamer.command.sender.DiscordCommandSender;
 
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class DiscordCommandListener {
   private final Set<CommandParseFlag> flagSet;
   private final CommandManager commandManager;
   private final JDA jda;
+  private final AtomicBoolean shutdown = new AtomicBoolean();
 
   public DiscordCommandListener(JDA jda, CommandManager commandManager) {
     this.jda = jda;
@@ -30,6 +32,10 @@ public class DiscordCommandListener {
 
   @SubscribeEvent
   public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    if (this.shutdown.get()) {
+      return;
+    }
+
     Message message = event.getMessage();
 
     if (message.isWebhookMessage()) {
@@ -51,6 +57,7 @@ public class DiscordCommandListener {
   }
 
   public void shutdown() {
+    this.shutdown.set(true);
     this.jda.removeEventListener(this);
   }
 

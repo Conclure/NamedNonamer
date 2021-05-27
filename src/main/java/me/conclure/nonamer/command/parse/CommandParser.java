@@ -8,7 +8,7 @@ import java.util.Set;
 import com.google.errorprone.annotations.Var;
 
 public class CommandParser {
-  static final String PREFIX = "!";
+  public static final String PREFIX = "!";
 
 
   public CommandParseResult parse(@Var String string, Set<CommandParseFlag> flags) {

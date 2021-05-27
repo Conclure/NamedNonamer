@@ -9,7 +9,6 @@ import me.conclure.nonamer.command.listener.DiscordCommandListener;
 import me.conclure.nonamer.command.sender.ConsoleCommandSender;
 
 public class CommandManager {
-  private final ConsoleCommandSender consoleSender;
   private final CommandCoordinator coordinator;
   private final CommandInterceptor interceptor;
   private final CommandParser parser;
@@ -17,12 +16,11 @@ public class CommandManager {
   private final DiscordCommandListener discordCommandListener;
 
   public CommandManager(Bootstrap bootstrap, JDA jda) {
-    this.coordinator = new CommandCoordinator(bootstrap);
+    this.parser = new CommandParser();
     this.interceptor = new CommandInterceptor(this);
-    this.consoleSender = new ConsoleCommandSender(this);
+    this.coordinator = new CommandCoordinator(bootstrap);
     this.consoleCommandListener = new ConsoleCommandListener(this);
     this.discordCommandListener = new DiscordCommandListener(jda, this);
-    this.parser = new CommandParser();
   }
 
   public CommandInterceptor interceptor() {

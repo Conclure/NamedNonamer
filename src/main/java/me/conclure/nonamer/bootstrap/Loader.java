@@ -1,5 +1,6 @@
 package me.conclure.nonamer.bootstrap;
 
+import com.neovisionaries.ws.client.WebSocketFactory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -39,7 +40,7 @@ class Loader extends AbstractBootstrapProcess {
         .build()
         .awaitReady();
     CommandManager commandManager = new CommandManager(this.bootstrap,jda);
-    this.bootstrap.setBot(new Bot(jda, commandManager));
+    this.bootstrap.setBot(new Bot(bootstrap, jda, commandManager));
 
     this.logger.debug("Loaded!");
   }

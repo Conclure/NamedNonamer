@@ -5,12 +5,15 @@ import me.conclure.nonamer.command.parse.CommandParseFlag;
 import me.conclure.nonamer.command.parse.CommandParseResult;
 import me.conclure.nonamer.command.parse.CommandParseSuccess;
 import me.conclure.nonamer.command.sender.CommandSender;
+import me.conclure.nonamer.util.logging.Logger;
+import me.conclure.nonamer.util.logging.LoggerCreator;
 
 import java.util.Collections;
 import java.util.Set;
 
 public class CommandInterceptor {
   private final CommandManager commandManager;
+  private final Logger logger = LoggerCreator.create("command-interception");
 
   public CommandInterceptor(CommandManager commandManager) {
     this.commandManager = commandManager;
@@ -25,7 +28,12 @@ public class CommandInterceptor {
 
     if (parse instanceof CommandParseSuccess) {
       CommandParseSuccess parseSuccess = (CommandParseSuccess)parse;
-      this.commandManager.coordinator().dispatch(sender,parseSuccess.name(),parseSuccess.arguments());
+      sender.name().thenAccept(name -> {
+        CommandArguments commandArguments = parseSuccess.arguments();
+        String commandName = parseSuccess.name();
+        this.logger.infof("%s issued: %s %s",name, commandName, commandArguments);
+        this.commandManager.coordinator().dispatch(sender, commandName, commandArguments);
+      });
       return;
     }
 

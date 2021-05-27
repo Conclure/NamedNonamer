@@ -11,19 +11,20 @@ import me.conclure.nonamer.util.logging.LoggerCreator;
 import java.util.concurrent.CompletableFuture;
 
 public class ConsoleCommandSender implements CommandSender {
-  private final CommandManager commandManager;
-  private final Logger logger = LoggerCreator.create("console");
 
-  public ConsoleCommandSender(CommandManager commandManager) {
-    this.commandManager = commandManager;
+  @Override
+  public CompletableFuture<PermissionResult> hasPermission(Permission permission) {
+    return CompletableFuture.completedFuture(PermissionResult.TRUE);
   }
 
   @Override
-  public PermissionResult hasPermission(Permission permission) {
-    return PermissionResult.TRUE;
+  public CompletableFuture<Void> sendMessage(String message) {
+    System.out.println(message);
+    return new CompletableFuture<>();
   }
 
-  public CompletableFuture<Void> sendMessage(String message) {
-    return CompletableFuture.runAsync(() -> this.logger.info(message), this.commandManager.coordinator().executor());
+  @Override
+  public CompletableFuture<String> name() {
+    return CompletableFuture.completedFuture("CONSOLE");
   }
 }

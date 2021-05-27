@@ -6,6 +6,7 @@ import me.conclure.nonamer.command.CommandManager;
 import me.conclure.nonamer.command.sender.CommandSender;
 import me.conclure.nonamer.command.sender.ConsoleCommandSender;
 
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -17,9 +18,9 @@ public class ConsoleCommandListener implements Runnable {
 
   public ConsoleCommandListener(CommandManager commandManager) {
     this.commandManager = commandManager;
-    this.consoleSender = new ConsoleCommandSender(commandManager);
+    this.consoleSender = new ConsoleCommandSender();
     Thread thread = new Thread(this);
-    thread.setName("console-command-publisher");
+    thread.setName("Console Listener");
     thread.start();
   }
 
@@ -27,8 +28,10 @@ public class ConsoleCommandListener implements Runnable {
   public void run() {
     CommandInterceptor interceptor = this.commandManager.interceptor();
 
-    while (!this.shutdown.get() && this.scanner.hasNextLine()) {
-      this.scanner.nextLine();
+    while (this.scanner.hasNextLine()) {
+      if (shutdown.get()) {
+        break;
+      }
       interceptor.handle(this.consoleSender,this.scanner.nextLine());
     }
 
@@ -36,7 +39,7 @@ public class ConsoleCommandListener implements Runnable {
   }
 
   public void shutdown() {
-    this.shutdown.set(false);
+    this.shutdown.set(true);
   }
 
 }
