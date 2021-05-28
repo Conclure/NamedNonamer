@@ -14,7 +14,6 @@ public class ConsoleCommandListener implements Runnable {
   private final CommandSender consoleSender;
   private final Scanner scanner = new Scanner(System.in);
   private final CommandManager commandManager;
-  private final AtomicBoolean shutdown = new AtomicBoolean();
 
   public ConsoleCommandListener(CommandManager commandManager) {
     this.commandManager = commandManager;
@@ -29,17 +28,14 @@ public class ConsoleCommandListener implements Runnable {
     CommandInterceptor interceptor = this.commandManager.interceptor();
 
     while (this.scanner.hasNextLine()) {
-      if (shutdown.get()) {
+      if (commandManager.shutdown()) {
+        System.out.println(1);
         break;
       }
+
       interceptor.handle(this.consoleSender,this.scanner.nextLine());
     }
 
     this.scanner.close();
   }
-
-  public void shutdown() {
-    this.shutdown.set(true);
-  }
-
 }

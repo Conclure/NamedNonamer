@@ -15,7 +15,7 @@ public abstract class AbstractBootstrapProcess implements Runnable, BootstrapPro
   @Override
   public final void run() {
     if (this.runCode != 1) {
-      throw new IllegalStateException();
+      return;
     }
 
     this.runCode--;

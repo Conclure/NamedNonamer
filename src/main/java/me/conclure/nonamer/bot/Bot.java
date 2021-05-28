@@ -10,13 +10,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class Bot {
   private final Bootstrap bootstrap;
-  private final JDA jda;
-  private final CommandManager commandManager;
+  private volatile JDA jda;
+  private volatile CommandManager commandManager;
 
-  public Bot(Bootstrap bootstrap, JDA jda, CommandManager commandManager) {
+  public Bot(Bootstrap bootstrap) {
     this.bootstrap = bootstrap;
-    this.jda = jda;
-    this.commandManager = commandManager;
   }
 
   public Bootstrap bootstrap() {
@@ -27,7 +25,15 @@ public class Bot {
     return this.jda;
   }
 
+  public void setJda(JDA jda) {
+    this.jda = jda;
+  }
+
   public CommandManager commandManager() {
     return this.commandManager;
+  }
+
+  public void setCommandManager(CommandManager commandManager) {
+    this.commandManager = commandManager;
   }
 }

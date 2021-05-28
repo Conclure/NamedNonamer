@@ -1,5 +1,6 @@
 package me.conclure.nonamer.command.listener;
 
+import me.conclure.nonamer.bot.Bot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -19,20 +20,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DiscordCommandListener {
   private final Set<CommandParseFlag> flagSet;
-  private final CommandManager commandManager;
-  private final JDA jda;
+  private final Bot bot;
   private final AtomicBoolean shutdown = new AtomicBoolean();
 
-  public DiscordCommandListener(JDA jda, CommandManager commandManager) {
-    this.jda = jda;
-    this.commandManager = commandManager;
+  public DiscordCommandListener(Bot bot) {
+    this.bot = bot;
     this.flagSet = EnumSet.of(CommandParseFlag.ASSERT_PREFIX);
-    jda.addEventListener(this);
+    bot.jda().addEventListener(this);
   }
 
   @SubscribeEvent
   public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-    if (this.shutdown.get()) {
+    if (bot.commandManager().shutdown()) {
       return;
     }
 
@@ -52,13 +51,7 @@ public class DiscordCommandListener {
     long guildId = message.getGuild().getIdLong();
     long channelId = message.getChannel().getIdLong();
 
-    CommandSender sender = new DiscordCommandSender(this.jda, authorId, guildId, channelId);
-    this.commandManager.interceptor().handle(sender, message.getContentStripped(), this.flagSet);
+    CommandSender sender = new DiscordCommandSender(this.bot.jda(), authorId, guildId, channelId);
+    this.bot.commandManager().interceptor().handle(sender, message.getContentStripped(), this.flagSet);
   }
-
-  public void shutdown() {
-    this.shutdown.set(true);
-    this.jda.removeEventListener(this);
-  }
-
 }

@@ -21,7 +21,7 @@ class Terminator extends AbstractBootstrapProcess {
   @Override
   protected void perform() throws Exception {
     Bot bot = this.bootstrap.bot();
-    bot.commandManager().shutdown();
+    bot.commandManager().signalShutdown();
     JDA jda = bot.jda();
     jda.shutdown();
 

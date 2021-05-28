@@ -30,6 +30,6 @@ public class CommandArguments implements Iterable<String> {
 
   @Override
   public String toString() {
-    return arguments.toString();
+    return String.join(" ",this.arguments);
   }
 }

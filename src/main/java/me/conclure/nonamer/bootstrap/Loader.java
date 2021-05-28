@@ -27,8 +27,9 @@ class Loader extends AbstractBootstrapProcess {
 
   @Override
   protected void perform() throws Exception {
-    OptionContext optionContext = this.bootstrap.optionContext();
-    JDA jda = JDABuilder.createDefault(optionContext.token())
+      Bot bot = this.bootstrap.bot();
+      OptionContext optionContext = this.bootstrap.optionContext();
+      JDA jda = JDABuilder.createDefault(optionContext.token())
         .setStatus(OnlineStatus.DO_NOT_DISTURB)
         .setEventManager(new AnnotatedEventManager())
         .addEventListeners(new Object() {
@@ -39,8 +40,8 @@ class Loader extends AbstractBootstrapProcess {
         })
         .build()
         .awaitReady();
-    CommandManager commandManager = new CommandManager(this.bootstrap,jda);
-    this.bootstrap.setBot(new Bot(bootstrap, jda, commandManager));
+      bot.setJda(jda);
+      bot.setCommandManager(new CommandManager(bot));
 
     this.logger.debug("Loaded!");
   }

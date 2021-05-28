@@ -24,10 +24,10 @@ public class Bootstrap {
       .setThreadFactory(Executors.defaultThreadFactory())
       .setUncaughtExceptionHandler((t,e) -> logger.error(e))
       .build());
-  private final AbstractBootstrapProcess enableProcess = new Loader(this);;
-  private final AbstractBootstrapProcess disableProcess = new Terminator(this);;
+  private final AbstractBootstrapProcess enableProcess = new Loader(this);
+  private final AbstractBootstrapProcess disableProcess = new Terminator(this);
   private final OptionContext optionContext;
-  private Bot bot;
+  private final Bot bot = new Bot(this);
 
   public Bootstrap(OptionContext context) {
     this.optionContext = context;
@@ -73,11 +73,7 @@ public class Bootstrap {
   }
 
   public Bot bot() {
-    return this.bot;
-  }
-
-  public void setBot(Bot bot) {
-    this.bot = bot;
+    return bot;
   }
 
   public Logger logger() {

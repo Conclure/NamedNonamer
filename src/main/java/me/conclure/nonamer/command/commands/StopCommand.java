@@ -16,6 +16,11 @@ public class StopCommand extends ConsoleCommand {
     @Override
     protected void executeSuccessfully(ConsoleCommandSender sender, CommandArguments arguments) {
         this.bootstrap.disable();
+        try {
+            this.bootstrap.disableProcess().await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

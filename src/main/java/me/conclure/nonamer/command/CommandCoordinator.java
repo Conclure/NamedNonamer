@@ -1,6 +1,7 @@
 package me.conclure.nonamer.command;
 
 import me.conclure.nonamer.bootstrap.Bootstrap;
+import me.conclure.nonamer.bot.Bot;
 import me.conclure.nonamer.command.commands.Command;
 import me.conclure.nonamer.command.commands.CommandException;
 import me.conclure.nonamer.command.commands.HelpCommand;
@@ -25,28 +26,25 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 public class CommandCoordinator {
-  private final ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
-      .setNameFormat("Command Executor")
-      .setDaemon(true)
-      .build());
-  private final Logger logger = LoggerCreator.create(this);
+  private final Logger logger = LoggerCreator.create("command-coordination");
   private final CommandMap commandMap;
+  private final Bot bot;
 
-  public CommandCoordinator(Bootstrap bootstrap) {
+  public CommandCoordinator(Bot bot) {
+    this.bot = bot;
+    Bootstrap bootstrap = bot.bootstrap();
     this.commandMap = new CommandMap(ImmutableList.<Command>builder()
             .add(new HelpCommand())
             .add(new StopCommand(bootstrap))
             .build());
-    this.executor.execute(() -> {
-      try {
-        bootstrap.enableProcess().await();
-      } catch (InterruptedException e) {
-        bootstrap.logger().error(e);
-      }
-    });
   }
 
-  public void dispatch(CommandSender sender, String commandName, CommandArguments line) {
+  public void dispatch(Executor executor, CommandSender sender, String commandName, CommandArguments line) {
+    if (bot.commandManager().shutdown()) {
+      this.logger.warnf("shutdown issue: %s",commandName);
+      return;
+    }
+
     Optional<Command> optional = this.commandMap.get(commandName);
 
     if (optional.isEmpty()) {
@@ -56,17 +54,11 @@ public class CommandCoordinator {
 
     Command command = optional.get();
 
-    this.executor.execute(() -> {
-      try {
-        command.execute(sender,line);
-      } catch (Exception exception) {
-        this.logger.error(new CommandException(exception));
-      }
-    });
-  }
-
-  public Executor executor() {
-    return this.executor;
+    try {
+      command.execute(sender,line);
+    } catch (Exception exception) {
+      this.logger.error(new CommandException(exception));
+    }
   }
 
   static class CommandMap {
